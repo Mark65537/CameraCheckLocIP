@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,7 +20,8 @@ namespace CameraCheckLocIP
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-
+            Text += Assembly.GetExecutingAssembly().GetName().Version;
+            MinimumSize = Size;
         }
     }
 }
