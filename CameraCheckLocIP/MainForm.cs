@@ -23,5 +23,18 @@ namespace CameraCheckLocIP
             Text += Assembly.GetExecutingAssembly().GetName().Version;
             MinimumSize = Size;
         }
+
+        private void b_plus_Click(object sender, EventArgs e)
+        {
+            new AddPortForm().Show();            
+        }
+
+        private void b_minus_Click(object sender, EventArgs e)
+        {
+            if (lB_port.SelectedIndex > -1)
+            {
+                lB_port.Items.RemoveAt(lB_port.SelectedIndex);
+            }
+        }
     }
 }
