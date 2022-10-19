@@ -31,7 +31,7 @@
             this.l_IPfrom = new System.Windows.Forms.Label();
             this.l_IPto = new System.Windows.Forms.Label();
             this.tB_IPFrom = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tB_IPTo = new System.Windows.Forms.TextBox();
             this.l_port = new System.Windows.Forms.Label();
             this.lB_port = new System.Windows.Forms.ListBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -73,15 +73,17 @@
             this.tB_IPFrom.Size = new System.Drawing.Size(130, 26);
             this.tB_IPFrom.TabIndex = 1;
             this.tB_IPFrom.Text = "192.168.0.0";
+            this.tB_IPFrom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tB_IPFrom_KeyPress);
             // 
-            // textBox2
+            // tB_IPTo
             // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox2.Location = new System.Drawing.Point(72, 90);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(130, 26);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.Text = "192.168.255.255";
+            this.tB_IPTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tB_IPTo.Location = new System.Drawing.Point(72, 90);
+            this.tB_IPTo.Name = "tB_IPTo";
+            this.tB_IPTo.Size = new System.Drawing.Size(130, 26);
+            this.tB_IPTo.TabIndex = 1;
+            this.tB_IPTo.Text = "192.168.255.255";
+            this.tB_IPTo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tB_IPTo_KeyPress);
             // 
             // l_port
             // 
@@ -195,7 +197,7 @@
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.lB_port);
             this.Controls.Add(this.l_port);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.tB_IPTo);
             this.Controls.Add(this.tB_IPFrom);
             this.Controls.Add(this.l_IPto);
             this.Controls.Add(this.l_IPfrom);
@@ -212,7 +214,7 @@
         private System.Windows.Forms.Label l_IPfrom;
         private System.Windows.Forms.Label l_IPto;
         private System.Windows.Forms.TextBox tB_IPFrom;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tB_IPTo;
         private System.Windows.Forms.Label l_port;
         private System.Windows.Forms.ListBox lB_port;
         private System.Windows.Forms.TextBox textBox3;

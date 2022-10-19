@@ -73,6 +73,7 @@
             this.tB_port.Name = "tB_port";
             this.tB_port.Size = new System.Drawing.Size(278, 26);
             this.tB_port.TabIndex = 3;
+            this.tB_port.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tB_port_KeyPress);
             // 
             // AddPortForm
             // 
