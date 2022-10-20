@@ -38,7 +38,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.b_plus = new System.Windows.Forms.Button();
             this.b_minus = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.b_startScan = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -148,14 +148,15 @@
             this.b_minus.UseVisualStyleBackColor = true;
             this.b_minus.Click += new System.EventHandler(this.b_minus_Click);
             // 
-            // button1
+            // b_startScan
             // 
-            this.button1.Location = new System.Drawing.Point(398, 32);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(96, 87);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "начать сканирование";
-            this.button1.UseVisualStyleBackColor = true;
+            this.b_startScan.Location = new System.Drawing.Point(398, 32);
+            this.b_startScan.Name = "b_startScan";
+            this.b_startScan.Size = new System.Drawing.Size(96, 87);
+            this.b_startScan.TabIndex = 9;
+            this.b_startScan.Text = "начать сканирование";
+            this.b_startScan.UseVisualStyleBackColor = true;
+            this.b_startScan.Click += new System.EventHandler(this.b_startScan_Click);
             // 
             // listView1
             // 
@@ -190,7 +191,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1032, 631);
             this.Controls.Add(this.listView1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.b_startScan);
             this.Controls.Add(this.b_minus);
             this.Controls.Add(this.b_plus);
             this.Controls.Add(this.label1);
@@ -221,7 +222,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button b_plus;
         private System.Windows.Forms.Button b_minus;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button b_startScan;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;

@@ -8,14 +8,15 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CameraCheckLocIP.Classes;
 
 namespace CameraCheckLocIP
 {
     public partial class MainForm : Form
     {
-        //мои переменные
-
-        //мои переменные конец
+        #region мои переменные
+         private TimeSpan _sequentalTime;
+        #endregion
         public MainForm()
         {
             InitializeComponent();
@@ -69,6 +70,21 @@ namespace CameraCheckLocIP
             {
                 e.Handled = true;
             }
+        }
+
+        private void b_startScan_Click(object sender, EventArgs e)
+        {
+            var startTime = DateTime.Now;
+
+            //_ipChecker = new SequentalIpChecker();
+
+            List<string> PortList = lB_port.Items.Cast<string>()
+                                     .Select(item => item.ToString())
+                                     .ToList();//исправить, возможно можно сократить
+
+            Checker.StartChecking(tB_IPFrom.Text,tB_IPTo.Text, PortList);
+
+            _sequentalTime = DateTime.Now - startTime;
         }
     }
 }
