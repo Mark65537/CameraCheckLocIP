@@ -14,7 +14,7 @@ namespace CameraCheckLocIP.Classes
             var v1 = address.GetAddressBytes();
             var v2 = v1.Reverse();
             var v3 = v2.ToArray();
-            var v4 = BitConverter.ToInt64(v3,0);
+            var v4 = BitConverter.ToUInt32(v3,0);
             return BitConverter.ToInt64(address.GetAddressBytes().Reverse().ToArray(), 0);
         }
 

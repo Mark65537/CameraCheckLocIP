@@ -85,6 +85,7 @@ namespace CameraCheckLocIP
             Checker.StartChecking(tB_IPFrom.Text,tB_IPTo.Text, PortList);
 
             _sequentalTime = DateTime.Now - startTime;
+
         }
     }
 }

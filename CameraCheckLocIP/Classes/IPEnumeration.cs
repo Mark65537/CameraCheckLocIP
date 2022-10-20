@@ -16,7 +16,7 @@ namespace CameraCheckLocIP.Classes
         ///<summary>
         ///<param name="IPFrom"></param>
         ///<returns>List<IPAddress></returns>
-        static List<IPAddress> GetIPList(IPAddress ipFrom, IPAddress ipTo)
+        public static List<IPAddress> GetIPList(IPAddress ipFrom, IPAddress ipTo)
         {
             List<IPAddress> ipList = new List<IPAddress>();
             string[] arrayFrom = ipFrom.ToString().Split(new char[] { '.' });
@@ -36,7 +36,7 @@ namespace CameraCheckLocIP.Classes
         ///<summary>
         ///<param name="IPFrom"></param>
         ///<returns></returns>
-        static List<IPAddress> EnumerateIpRange(IPAddress IPFrom, IPAddress IPTo)
+        public static List<IPAddress> EnumerateIPRange(IPAddress IPFrom, IPAddress IPTo)
         {
             List<IPAddress> ipList = new List<IPAddress>();
             var buffer = IPFrom.GetAddressBytes();
@@ -52,7 +52,12 @@ namespace CameraCheckLocIP.Classes
             return ipList;
         }
 
-        static List<IPAddress> GetIPListDNS()
+        ///<summary>
+        /// перебирает все IPv4 адреса в локальной сети
+        ///<summary>
+        ///<param name="IPFrom"></param>
+        ///<returns></returns>
+        public static List<IPAddress> GetIPListDNS()
         {
             IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
             List<IPAddress> ipList = new List<IPAddress>();
@@ -78,6 +83,51 @@ namespace CameraCheckLocIP.Classes
         {
             return Dns.GetHostAddresses(Dns.GetHostName())
                     .Where(a => a.AddressFamily == AddressFamily.InterNetwork).ToArray();
+        }
+
+        private static List<IPAddress> IPAddressesRange(IPAddress firstIPAddress, IPAddress lastIPAddress)
+        {
+            var firstIPAddressAsBytesArray = firstIPAddress.GetAddressBytes();
+
+            var lastIPAddressAsBytesArray = lastIPAddress.GetAddressBytes();
+
+            Array.Reverse(firstIPAddressAsBytesArray);
+
+            Array.Reverse(lastIPAddressAsBytesArray);
+
+            var firstIPAddressAsInt = BitConverter.ToInt32(firstIPAddressAsBytesArray, 0);
+
+            var lastIPAddressAsInt = BitConverter.ToInt32(lastIPAddressAsBytesArray, 0);
+
+            var ipAddressesInTheRange = new List<IPAddress>();
+
+            for (var i = firstIPAddressAsInt; i <= lastIPAddressAsInt; i++)
+            {
+                var bytes = BitConverter.GetBytes(i);
+
+                var newIp = new IPAddress(new[] { bytes[3], bytes[2], bytes[1], bytes[0] });
+
+                ipAddressesInTheRange.Add(newIp);
+            }
+
+            return ipAddressesInTheRange;
+        }
+
+        ///<summary>
+        /// перебирает все IP адреса из заданого диапазона
+        /// что бы перевести int обратно в string нужно опять же сделать так:
+        /// string address = new IPAddress(BitConverter.GetBytes(intAddress)).ToString();
+        ///<summary>
+        ///<param name="from">IP адресс начала перебора</param>
+        ///<param name="to">IP адресс конца перебора</param>
+        ///<returns>IEnumerable<int></returns>
+        private static IEnumerable<int> IPAddressesRange(string from, string to)
+        {
+            //нужно хэндлить исключения так как пользователь может ввести чушь
+            int ipFrom = BitConverter.ToInt32(IPAddress.Parse(from).GetAddressBytes(), 0);
+            int ipTo = BitConverter.ToInt32(IPAddress.Parse(to).GetAddressBytes(), 0);
+
+            return Enumerable.Range(ipFrom, ipTo);
         }
     }
 }
