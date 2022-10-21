@@ -46,9 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Checker.cs" />
-    <Compile Include="Classes\IPConverter.cs" />
-    <Compile Include="Classes\IPEnumeration.cs" />
+    <Compile Include="Model\CheckingResult.cs" />
+    <Compile Include="MyClasses\Checker.cs" />
+    <Compile Include="MyClasses\IPConverter.cs" />
+    <Compile Include="MyClasses\IPEnumeration.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
