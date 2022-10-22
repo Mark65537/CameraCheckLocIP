@@ -39,17 +39,32 @@ namespace CameraCheckLocIP.Classes
         internal static async void StartChecking(MainForm form, string IPFrom, string IPTo, List<string> ports)
         {
             Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
-
             try
             {                
                 stopwatch.Start();//засекаем время начала операции
 
                 IPAddress IPAFrom = IPAddress.Parse(IPFrom);
                 IPAddress IPATo = IPAddress.Parse(IPTo);
+                List<IPAddress> SuccessIPList = new List<IPAddress>();
 
                 CheckIPRange(IPAFrom, IPATo);
-                //var v1 = CheckPingInvoke(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
-                var SuccessIPList = CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
+                
+                var IPList=IPEnumeration.EnumerateIPRange(IPAFrom, IPATo);
+
+                foreach (var ip in IPList)
+                {
+                    var canPing = await Task.Run(() => { return CheckPing(ip, (int)form.nUD_timeout.Value); });
+                    if (canPing)
+                    {
+                        SuccessIPList.Add(ip);
+                    }
+                    else
+                    {
+                        form.tB_output.Text += $"IP адрес {ip} не доступен\r\n";
+                    }                    
+                }
+                //SuccessIPList = CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
+
                 for (int i = 0; i < SuccessIPList.Count; i++)//нельзя использовать foreach так как нужен итератор
                 {
                     var v = await Task.Run(() => { return CheckHTTPforTask(SuccessIPList[i],ports); });
@@ -60,7 +75,7 @@ namespace CameraCheckLocIP.Classes
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Проверка не выполнена", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Проверка не выполнена: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -95,7 +110,7 @@ namespace CameraCheckLocIP.Classes
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Проверка не выполнена", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Проверка не выполнена: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -231,14 +246,14 @@ namespace CameraCheckLocIP.Classes
                 
         }
 
-        public static List<IPAddress> CheckPingParForEach(List<IPAddress> IPAddresses)
+        public static List<IPAddress> CheckPingParForEach(List<IPAddress> IPAddresses, int timeout = 100)
         {
             List<IPAddress> SuccessIPList = new List<IPAddress>();
 
             Parallel.ForEach(IPAddresses, ip =>
             {
                 Ping ping = new Ping();
-                var pStat = ping.Send(ip, 100);
+                var pStat = ping.Send(ip, timeout);
                 //pStat.Wait();
 
                 if (pStat != null)
@@ -252,9 +267,23 @@ namespace CameraCheckLocIP.Classes
                     }
                 }
             });
-
-            //MessageBox.Show("Parallel for");
             return SuccessIPList;
+        }
+
+        public static bool CheckPing(IPAddress ip, int timeout=100)
+        {
+            Ping ping = new Ping();
+            var pStat = ping.Send(ip, timeout);
+            //pStat.Wait();
+
+            if (pStat != null)
+            {
+                if (pStat.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 

@@ -34,7 +34,7 @@
             this.tB_IPTo = new System.Windows.Forms.TextBox();
             this.l_port = new System.Windows.Forms.Label();
             this.lB_port = new System.Windows.Forms.ListBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.tB_output = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.b_plus = new System.Windows.Forms.Button();
             this.b_minus = new System.Windows.Forms.Button();
@@ -47,6 +47,7 @@
             this.nUD_timeout = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.l_totalTime = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.nUD_timeout)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,14 +114,16 @@
             this.lB_port.Size = new System.Drawing.Size(120, 84);
             this.lB_port.TabIndex = 4;
             // 
-            // textBox3
+            // tB_output
             // 
-            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox3.Location = new System.Drawing.Point(12, 503);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(1008, 116);
-            this.textBox3.TabIndex = 5;
+            this.tB_output.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tB_output.ForeColor = System.Drawing.Color.Red;
+            this.tB_output.Location = new System.Drawing.Point(12, 503);
+            this.tB_output.Multiline = true;
+            this.tB_output.Name = "tB_output";
+            this.tB_output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tB_output.Size = new System.Drawing.Size(1008, 116);
+            this.tB_output.TabIndex = 5;
             // 
             // label1
             // 
@@ -246,11 +249,20 @@
             this.l_totalTime.TabIndex = 14;
             this.l_totalTime.Text = "0:00:00:00";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(12, 645);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(1008, 23);
+            this.progressBar1.TabIndex = 15;
+            this.progressBar1.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1032, 707);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.l_totalTime);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.nUD_timeout);
@@ -260,7 +272,7 @@
             this.Controls.Add(this.b_minus);
             this.Controls.Add(this.b_plus);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.tB_output);
             this.Controls.Add(this.lB_port);
             this.Controls.Add(this.l_port);
             this.Controls.Add(this.tB_IPTo);
@@ -284,7 +296,6 @@
         private System.Windows.Forms.TextBox tB_IPTo;
         private System.Windows.Forms.Label l_port;
         private System.Windows.Forms.ListBox lB_port;
-        private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button b_plus;
         private System.Windows.Forms.Button b_minus;
@@ -292,11 +303,13 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Label l_timeout;
-        private System.Windows.Forms.NumericUpDown nUD_timeout;
         private System.Windows.Forms.Label label2;
         public System.Windows.Forms.ListView lV_output;
         public System.Windows.Forms.Button b_startScan;
         public System.Windows.Forms.Label l_totalTime;
+        public System.Windows.Forms.NumericUpDown nUD_timeout;
+        public System.Windows.Forms.TextBox tB_output;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

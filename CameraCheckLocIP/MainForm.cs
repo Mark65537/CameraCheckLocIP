@@ -89,6 +89,7 @@ namespace CameraCheckLocIP
             b_startScan.Enabled = false;
 
             lV_output.Items.Clear();
+            tB_output.Clear();
             //Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
             //stopwatch.Start();//засекаем время начала операции
 
