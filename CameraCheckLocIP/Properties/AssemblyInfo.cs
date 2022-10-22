@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 //Если выдает ошибку, то нужно в файле проекта .csproj заменить значение параметра
 //< Deterministic > ...</ Deterministic > с true на false.
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.1.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 /*РУС

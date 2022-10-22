@@ -288,15 +288,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button b_plus;
         private System.Windows.Forms.Button b_minus;
-        private System.Windows.Forms.Button b_startScan;
-        private System.Windows.Forms.ListView lV_output;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Label l_timeout;
         private System.Windows.Forms.NumericUpDown nUD_timeout;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label l_totalTime;
+        public System.Windows.Forms.ListView lV_output;
+        public System.Windows.Forms.Button b_startScan;
+        public System.Windows.Forms.Label l_totalTime;
     }
 }
 

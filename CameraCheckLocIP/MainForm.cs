@@ -84,65 +84,62 @@ namespace CameraCheckLocIP
             }
         }
 
-        private async void b_startScan_Click(object sender, EventArgs e)
+        private  void b_startScan_Click(object sender, EventArgs e)
         {
             b_startScan.Enabled = false;
 
-            Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
-            stopwatch.Start();//засекаем время начала операции
+            lV_output.Items.Clear();
+            //Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
+            //stopwatch.Start();//засекаем время начала операции
 
-            //List<string> PortList = lB_port.Items.Cast<string>()
-            //                             .Select(item => item.ToString())
-            //                             .ToList();//исправить, возможно можно сократить
+            List<string> PortList = lB_port.Items.Cast<string>()
+                                         .Select(item => item.ToString())
+                                         .ToList();//исправить, возможно можно сократить
 
-            //Checker.StartChecking(tB_IPFrom.Text, tB_IPTo.Text, PortList);
-            try
-            {
-                //Task.Run(() =>{
-                List<string> PortList = lB_port.Items.Cast<string>()
-                                     .Select(item => item.ToString())
-                                     .ToList();//исправить, возможно можно сократить
+            Checker.StartChecking(this, tB_IPFrom.Text, tB_IPTo.Text, PortList);
 
-                IPAddress IPAFrom = IPAddress.Parse(tB_IPFrom.Text);
-                IPAddress IPATo = IPAddress.Parse(tB_IPTo.Text);
+            //try
+            //{
+            //    //Task.Run(() =>{
+                
 
-                Checker.CheckIPRange(IPAFrom, IPATo);
-                var SuccessIPList = Checker.CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
+            //    Checker.CheckIPRange(IPAFrom, IPATo);
+            //    var SuccessIPList = Checker.CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
 
-                for(int i=0; i<SuccessIPList.Count; i++)
-                {
-                    var v = await Task.Run(() => { return Checker.CheckHTTPforTask(SuccessIPList[i], PortList); });
-                    lV_output.Items.Add(v.Ip);
-                    lV_output.Items[i].SubItems.Add(v.Port);
-                    lV_output.Items[i].SubItems.Add(v.HttpStatusCode.ToString());
-                    //lV_output.Items[i].SubItems.Add();
-                }
-                    
+            //    for (int i = 0; i < SuccessIPList.Count; i++)
+            //    {
+            //        //var v = await Task.Run(() => { return Checker.CheckHTTPforTask(SuccessIPList[i], PortList); });
+            //        //lV_output.Items.Add(v.Ip);
+            //        //lV_output.Items[i].SubItems.Add(v.Port);
+            //        //lV_output.Items[i].SubItems.Add(v.HttpStatusCode.ToString());
+            //        //lV_output.Items[i].SubItems.Add();
+            //    }
 
-                //lV_output.Items.SubItems.Add(i.ToString());
-                //lV_output.Items.SubItems.Add("port");
-                //foreach (var HTTPStat in Checker.CheckHTTP(SuccessIPList, PortList))
-                //    {
-                //        lV_output.Text = HTTPStat.ToString();
-                //    }
-                //});
-                //Checker.StartChecking(tB_IPFrom.Text, tB_IPTo.Text, PortList);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка");
-            }
-            finally
-            {
-                stopwatch.Stop();//останавливаем счётчик            
-                TimeSpan ts = stopwatch.Elapsed;
 
-                l_totalTime.Text = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", // Создаем строку, содержащую время выполнения операции.
-                                    ts.Hours, ts.Minutes, ts.Seconds,
-                                    ts.Milliseconds / 10);
+            //    //lV_output.Items.SubItems.Add(i.ToString());
+            //    //lV_output.Items.SubItems.Add("port");
+            //    //foreach (var HTTPStat in Checker.CheckHTTP(SuccessIPList, PortList))
+            //    //    {
+            //    //        lV_output.Text = HTTPStat.ToString();
+            //    //    }
+            //    //});
+            //    //Checker.StartChecking(tB_IPFrom.Text, tB_IPTo.Text, PortList);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Ошибка");
+            //}
+            //finally
+            //{
+            //    stopwatch.Stop();//останавливаем счётчик            
+            //    TimeSpan ts = stopwatch.Elapsed;
 
-                b_startScan.Enabled = true;
-            }
+            //    l_totalTime.Text = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", // Создаем строку, содержащую время выполнения операции.
+            //                        ts.Hours, ts.Minutes, ts.Seconds,
+            //                        ts.Milliseconds / 10);
+
+            //    b_startScan.Enabled = true;
+            //}
         }
     }
 }
