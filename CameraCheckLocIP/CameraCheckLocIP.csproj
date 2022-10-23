@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\CheckingResult.cs" />
-    <Compile Include="MyClasses\Checker.cs" />
+    <Compile Include="Checker.cs" />
     <Compile Include="MyClasses\HTTPChecking.cs" />
     <Compile Include="MyClasses\IPConverter.cs" />
     <Compile Include="MyClasses\IPEnumeration.cs" />
