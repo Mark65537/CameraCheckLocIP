@@ -307,9 +307,9 @@
         public System.Windows.Forms.ListView lV_output;
         public System.Windows.Forms.Button b_startScan;
         public System.Windows.Forms.Label l_totalTime;
-        public System.Windows.Forms.NumericUpDown nUD_timeout;
         public System.Windows.Forms.TextBox tB_output;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.NumericUpDown nUD_timeout;
     }
 }
 

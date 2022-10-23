@@ -97,7 +97,7 @@ namespace CameraCheckLocIP
                                          .Select(item => item.ToString())
                                          .ToList();//исправить, возможно можно сократить
 
-            Checker.StartChecking(this, tB_IPFrom.Text, tB_IPTo.Text, PortList);
+            Checker.StartChecking(this, tB_IPFrom.Text, tB_IPTo.Text, PortList, (int)nUD_timeout.Value);
 
             //try
             //{

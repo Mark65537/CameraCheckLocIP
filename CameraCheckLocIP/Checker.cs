@@ -1,4 +1,5 @@
 ﻿using CameraCheckLocIP.Model;
+using CameraCheckLocIP.MyClasses;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +20,7 @@ namespace CameraCheckLocIP.Classes
         #region мои переменные
          private static string _httpRequest="http://{0}/cgi-bin/admin/privacy.cgi";
         #endregion
+
         public static async void test(MainForm form)
         {
             //var result = await Task.Run(() => { Thread.Sleep(5000); return DateTime.Now.ToShortDateString(); }); //имитация длительного процесса            
@@ -36,9 +38,10 @@ namespace CameraCheckLocIP.Classes
             }
             //return null;
         }
-        internal static async void StartChecking(MainForm form, string IPFrom, string IPTo, List<string> ports)
+        internal static async void StartChecking(MainForm form, string IPFrom, string IPTo, List<string> ports, int pingTimeout=100)
         {
-            Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
+            Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время\
+            TimeSpan ts;
             try
             {                
                 stopwatch.Start();//засекаем время начала операции
@@ -46,6 +49,7 @@ namespace CameraCheckLocIP.Classes
                 IPAddress IPAFrom = IPAddress.Parse(IPFrom);
                 IPAddress IPATo = IPAddress.Parse(IPTo);
                 List<IPAddress> SuccessIPList = new List<IPAddress>();
+                
 
                 CheckIPRange(IPAFrom, IPATo);
                 
@@ -53,7 +57,7 @@ namespace CameraCheckLocIP.Classes
 
                 foreach (var ip in IPList)
                 {
-                    var canPing = await Task.Run(() => { return CheckPing(ip, (int)form.nUD_timeout.Value); });
+                    var canPing = await Task.Run(() => { return CheckPing(ip, pingTimeout); });
                     if (canPing)
                     {
                         SuccessIPList.Add(ip);
@@ -63,24 +67,38 @@ namespace CameraCheckLocIP.Classes
                         form.tB_output.Text += $"IP адрес {ip} не доступен\r\n";
                     }                    
                 }
-                //SuccessIPList = CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
 
                 for (int i = 0; i < SuccessIPList.Count; i++)//нельзя использовать foreach так как нужен итератор
                 {
-                    var v = await Task.Run(() => { return CheckHTTPforTask(SuccessIPList[i],ports); });
-                    form.lV_output.Items.Add(v.IP);
-                    form.lV_output.Items[i].SubItems.Add(v.Port);
-                    form.lV_output.Items[i].SubItems.Add(v.HttpStatusCode.ToString());                    
+                    var Res = await Task.Run(() => { return HTTPChecking.CheckHTTP(SuccessIPList[i],ports); });
+                    if (Res != null)
+                    {
+                        for (int k = 0; k < Res.Count; k++)//нельзя использовать foreach так как нужен итератор
+                        {
+                            form.lV_output.Items.Add(Res[k].IP.ToString());
+                            int li= form.lV_output.Items.Count - 1;
+                            form.lV_output.Items[li].SubItems.Add(Res[k].Port);
+                            form.lV_output.Items[li].SubItems.Add(Res[k].HttpStatusCode.ToString());
+                        }                        
+                    }                    
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Проверка не выполнена: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
                 stopwatch.Stop();//останавливаем счётчик            
-                TimeSpan ts = stopwatch.Elapsed;
+                ts = stopwatch.Elapsed;
+
+                form.l_totalTime.Text = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", // Создаем строку, содержащую время выполнения операции.
+                                    ts.Hours, ts.Minutes, ts.Seconds,
+                                    ts.Milliseconds / 10);
+
+                form.b_startScan.Enabled = true;
+                return;
+            }
+
+                stopwatch.Stop();//останавливаем счётчик            
+                ts = stopwatch.Elapsed;
 
                 form.l_totalTime.Text = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", // Создаем строку, содержащую время выполнения операции.
                                     ts.Hours, ts.Minutes, ts.Seconds,
@@ -88,7 +106,7 @@ namespace CameraCheckLocIP.Classes
 
                 form.b_startScan.Enabled = true;
                 MessageBox.Show("Проверка выполнена успешна", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+
         }
     
 
@@ -106,7 +124,7 @@ namespace CameraCheckLocIP.Classes
                 CheckIPRange(IPAFrom, IPATo);
                 //var v1 = CheckPingInvoke(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
                 var v2 = CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
-                CheckHTTP(v2, ports);
+                HTTPChecking.CheckHTTP(v2, ports);
             }
             catch (Exception ex)
             {

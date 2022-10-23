@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CameraCheckLocIP.MyClasses
@@ -39,7 +40,6 @@ namespace CameraCheckLocIP.MyClasses
 
                     using (var client = new HttpClient())//повтор. упростить
                     {
-
                         var task = client.GetAsync(address);
                         task.Wait();
                         yield return task.Result.StatusCode;
@@ -47,9 +47,63 @@ namespace CameraCheckLocIP.MyClasses
                 }
         }
 
+        public static List<CheckingResult> CheckHTTP(IPAddress ip, List<string> ports)
+        {
+            string address;
+            List<CheckingResult> Lcr = new List<CheckingResult>();
+            var cts = new CancellationTokenSource();
+            if (ports.Count > 0)
+            {
+                foreach (var port in ports)
+                {
+                    string adresswithport = string.Format("{0}:{1}", ip, port);
+                    address = string.Format(_httpRequest, adresswithport);
+
+                    using (var client = new HttpClient())
+                    {
+                        try
+                        {
+                            client.Timeout = TimeSpan.FromMilliseconds(1500);
+                            var task = client.GetAsync(address);
+                            task.Wait();
+                            Lcr.Add(new CheckingResult(ip: ip,
+                                                       port: port,
+                                                       httpstatuscode: task.Result.StatusCode));
+                        }
+
+                        catch (AggregateException ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());                            
+                        }
+                    }
+                }
+                return Lcr;
+            }
+            else
+            {
+                address = string.Format(_httpRequest, ip);
+
+                using (var client = new HttpClient())//повтор. упростить
+                {
+                    var task = client.GetAsync(address);
+                    task.Wait();
+                    Lcr.Add(new CheckingResult(ip: ip,
+                                               port: null,
+                                               httpstatuscode: task.Result.StatusCode));
+                    return Lcr;
+                }
+            }
+            return null;
+        }
+
         public static CheckingResult CheckHTTP(IPAddress ip, string port)
         {
             string address;
+            CheckingResult cr;
 
             if (string.IsNullOrEmpty(port))
             {
@@ -65,10 +119,10 @@ namespace CameraCheckLocIP.MyClasses
             {
                 var task = client.GetAsync(address);
                 task.Wait();
-                CheckingResult cr = new CheckingResult();
-                cr.IP = ip.ToString();
-                cr.Port = port;
-                cr.HttpStatusCode = task.Result.StatusCode;
+                
+                cr = new CheckingResult(ip: ip,
+                                        port: port,
+                                        httpstatuscode: task.Result.StatusCode);
                 return cr;
             }
         }

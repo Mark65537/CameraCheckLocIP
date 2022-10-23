@@ -32,7 +32,7 @@ namespace CameraCheckLocIP.Classes
 
         ///<summary>
         /// IEnumerable<IPAddress>
-        /// еще один способ перебора адресов, еще не проверенный
+        /// еще один способ перебора адресов. Предпочтителен
         ///<summary>
         ///<param name="IPFrom"></param>
         ///<returns></returns>
