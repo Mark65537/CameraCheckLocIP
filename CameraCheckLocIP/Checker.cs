@@ -18,18 +18,19 @@ namespace CameraCheckLocIP.Classes
     internal class Checker : IDisposable
     {
         #region мои переменные
-         private static string _httpRequest="http://{0}/cgi-bin/admin/privacy.cgi";
+         private string _httpRequest="http://{0}/cgi-bin/admin/privacy.cgi";//находиться здесь что бы было проще найти в коде
+         private CancellationTokenSource _cancTokSource = new CancellationTokenSource();
         #endregion
 
-        public static async void test(MainForm form)
+        public async void test(MainForm form)
         {
             //var result = await Task.Run(() => { Thread.Sleep(5000); return DateTime.Now.ToShortDateString(); }); //имитация длительного процесса            
             //return result;
             //MainForm form = new MainForm();
             //form.lV_output.Items.Add("текст");
-            Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
-            stopwatch.Start();//засекаем время начала операции
-            for (int i = 0; i < 10; i++)
+            //Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
+            //stopwatch.Start();//засекаем время начала операции
+            for (int i = 0; i < 3; i++)
             {
                 var v = await Task.Run(() => { Thread.Sleep(5000); return DateTime.Now.ToString(); });
                 form.lV_output.Items.Add(v.ToString());
@@ -38,10 +39,20 @@ namespace CameraCheckLocIP.Classes
             }
             //return null;
         }
-        internal static async void StartChecking(MainForm form, string IPFrom, string IPTo, List<string> ports, int pingTimeout=100)
+
+        ///<summary>
+        /// асинхронный метод для начала проверки
+        /// 
+        ///<summary>
+        ///<param name="form"></param>
+        ///<returns></returns>
+        public async void StartCheckingAsync(MainForm form, string IPFrom, string IPTo, List<string> ports, int pingTimeout=100)
         {
-            Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время\
+            _cancTokSource.Token.ThrowIfCancellationRequested();
+
+            Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
             TimeSpan ts;
+
             try
             {                
                 stopwatch.Start();//засекаем время начала операции
@@ -55,9 +66,10 @@ namespace CameraCheckLocIP.Classes
                 
                 var IPList=IPEnumeration.EnumerateIPRange(IPAFrom, IPATo);
 
+                //проверка Ping
                 foreach (var ip in IPList)
                 {
-                    var canPing = await Task.Run(() => { return CheckPing(ip, pingTimeout); });
+                    var canPing = await Task.Run(() => { return PingChecking.CheckPing(ip, pingTimeout); }, _cancTokSource.Token);
                     if (canPing)
                     {
                         SuccessIPList.Add(ip);
@@ -68,23 +80,35 @@ namespace CameraCheckLocIP.Classes
                     }                    
                 }
 
+                //Проверка запросом
                 for (int i = 0; i < SuccessIPList.Count; i++)//нельзя использовать foreach так как нужен итератор
                 {
-                    var Res = await Task.Run(() => { return HTTPChecking.CheckHTTP(SuccessIPList[i],ports); });
+                    var Res = await Task.Run(() => { return HTTPChecking.CheckHTTP(SuccessIPList[i],ports, _httpRequest); }, _cancTokSource.Token);
                     if (Res != null)
                     {
                         for (int k = 0; k < Res.Count; k++)//нельзя использовать foreach так как нужен итератор
                         {
                             form.lV_output.Items.Add(Res[k].IP.ToString());
                             int li= form.lV_output.Items.Count - 1;
+                            form.lV_output.Items[li].EnsureVisible();
                             form.lV_output.Items[li].SubItems.Add(Res[k].Port);
                             form.lV_output.Items[li].SubItems.Add(Res[k].HttpStatusCode.ToString());
                         }                        
                     }                    
                 }
+
+            }
+            catch (OperationCanceledException)//TaskCanceledException
+            {
+                throw;
             }
             catch (Exception ex)
             {
+                if (ex is OperationCanceledException || ex is ObjectDisposedException)
+                {
+                    throw;
+                }
+
                 MessageBox.Show($"Проверка не выполнена: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 stopwatch.Stop();//останавливаем счётчик            
                 ts = stopwatch.Elapsed;
@@ -109,8 +133,7 @@ namespace CameraCheckLocIP.Classes
 
         }
     
-
-        internal static async void StartChecking(string IPFrom, string IPTo, List<string> ports)
+        public void StartChecking(string IPFrom, string IPTo, List<string> ports)
         {
             Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
             
@@ -123,8 +146,8 @@ namespace CameraCheckLocIP.Classes
 
                 CheckIPRange(IPAFrom, IPATo);
                 //var v1 = CheckPingInvoke(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
-                var v2 = CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
-                HTTPChecking.CheckHTTP(v2, ports);
+                var v2 = PingChecking.CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
+                HTTPChecking.CheckHTTP(v2, ports, _httpRequest);
             }
             catch (Exception ex)
             {
@@ -141,11 +164,9 @@ namespace CameraCheckLocIP.Classes
                 MessageBox.Show("Проверка выполнена", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-        }
-        
-        
+        }                
 
-        public static void CheckIPRange(IPAddress IPFrom, IPAddress IPTo)
+        public void CheckIPRange(IPAddress IPFrom, IPAddress IPTo)
         {
 
             //long start = BitConverter.ToInt32(IPFrom.GetAddressBytes(), 0);//переводим IP в long для удобного подсчета
@@ -161,85 +182,12 @@ namespace CameraCheckLocIP.Classes
                 //List<IPAddress> ipList = IPEnumeration.EnumerateIPRange(IPFrom, IPTo);//для проверки
 
                 
-        }
-
-        public static List<IPAddress> CheckPingParForEach(List<IPAddress> IPAddresses, int timeout = 100)
-        {
-            List<IPAddress> SuccessIPList = new List<IPAddress>();
-
-            Parallel.ForEach(IPAddresses, ip =>
-            {
-                Ping ping = new Ping();
-                var pStat = ping.Send(ip, timeout);
-                //pStat.Wait();
-
-                if (pStat != null)
-                {
-                    if (pStat.Status == IPStatus.Success)
-                    {
-                        lock (SuccessIPList)
-                        {
-                            SuccessIPList.Add(ip);
-                        }                        
-                    }
-                }
-            });
-            return SuccessIPList;
-        }
-
-        public static bool CheckPing(IPAddress ip, int timeout=100)
-        {
-            Ping ping = new Ping();
-            var pStat = ping.Send(ip, timeout);
-            //pStat.Wait();
-
-            if (pStat != null)
-            {
-                if (pStat.Status == IPStatus.Success)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
-        ///<summary>
-        /// в данный момент не используется так как выдает не все значения
-        ///<summary>
-        ///<param name="IPAddresses"></param>
-        ///<returns>List<IPAddress></returns>
-        private static List<IPAddress> CheckPingInvoke(List<IPAddress> IPAddresses)
-        {
-            List<IPAddress> SuccessIPList = new List<IPAddress>();
-
-            Parallel.ForEach(IPAddresses, ip =>
-            {
-                Func<PingReply> pingDelegate = () => new Ping().Send(ip);
-
-                IAsyncResult result = pingDelegate.BeginInvoke(r => pingDelegate.EndInvoke(r), null);
-
-                //wait for thread to complete
-                result.AsyncWaitHandle.WaitOne(100);
-
-                if (result.IsCompleted)
-                {
-                    //Ping Succeeded do something
-                    //PingReply reply = (PingReply)result;
-                    lock (SuccessIPList)
-                    {
-                        SuccessIPList.Add(ip);
-                    }
-                }
-            });
-
-            MessageBox.Show("Invoke for");
-            return SuccessIPList;
-        }
+        }        
 
         public void Dispose()
         {
-            
+            _cancTokSource.Cancel();
+            _cancTokSource.Dispose();//рекомендуется использовать для очистки памяти
         }
     }
 }

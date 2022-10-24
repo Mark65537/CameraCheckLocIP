@@ -48,9 +48,9 @@
   <ItemGroup>
     <Compile Include="Model\CheckingResult.cs" />
     <Compile Include="Checker.cs" />
-    <Compile Include="MyClasses\HTTPChecking.cs" />
-    <Compile Include="MyClasses\IPConverter.cs" />
-    <Compile Include="MyClasses\IPEnumeration.cs" />
+    <Compile Include="IpPingReq\HTTPChecking.cs" />
+    <Compile Include="IpPingReq\IPConverter.cs" />
+    <Compile Include="IpPingReq\IPEnumeration.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,7 +63,7 @@
     <Compile Include="AddPortForm.Designer.cs">
       <DependentUpon>AddPortForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyClasses\PingChecking.cs" />
+    <Compile Include="IpPingReq\PingChecking.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddPortForm.resx">

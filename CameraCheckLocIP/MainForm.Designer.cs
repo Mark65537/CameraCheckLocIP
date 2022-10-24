@@ -107,8 +107,7 @@
             this.lB_port.FormattingEnabled = true;
             this.lB_port.ItemHeight = 20;
             this.lB_port.Items.AddRange(new object[] {
-            "80",
-            "8080"});
+            "80"});
             this.lB_port.Location = new System.Drawing.Point(359, 33);
             this.lB_port.Name = "lB_port";
             this.lB_port.Size = new System.Drawing.Size(120, 84);
@@ -281,6 +280,7 @@
             this.Controls.Add(this.l_IPfrom);
             this.Name = "MainForm";
             this.Text = "CameraCheckLocIP ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nUD_timeout)).EndInit();
             this.ResumeLayout(false);

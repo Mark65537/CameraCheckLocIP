@@ -13,9 +13,9 @@ namespace CameraCheckLocIP.MyClasses
     internal class HTTPChecking
     {
         #region мои переменные
-         private static string _httpRequest = "http://{0}/cgi-bin/admin/privacy.cgi";
+         public string httpRequest = "http://{0}/cgi-bin/admin/privacy.cgi";
         #endregion
-        public static IEnumerable<HttpStatusCode> CheckHTTP(List<IPAddress> SuccessIPList, List<string> ports)
+        public static IEnumerable<HttpStatusCode> CheckHTTP(List<IPAddress> SuccessIPList, List<string> ports, string httpRequest)
         {
             string address;
             foreach (var ip in SuccessIPList)
@@ -24,7 +24,7 @@ namespace CameraCheckLocIP.MyClasses
                     foreach (var port in ports)
                     {
                         string adresswithport = string.Format("{0}:{1}", ip, port);
-                        address = string.Format(_httpRequest, adresswithport);
+                        address = string.Format(httpRequest, adresswithport);
 
                         using (var client = new HttpClient())
                         {
@@ -36,7 +36,7 @@ namespace CameraCheckLocIP.MyClasses
                 }
                 else
                 {
-                    address = string.Format(_httpRequest, ip);
+                    address = string.Format(httpRequest, ip);
 
                     using (var client = new HttpClient())//повтор. упростить
                     {
@@ -47,7 +47,7 @@ namespace CameraCheckLocIP.MyClasses
                 }
         }
 
-        public static List<CheckingResult> CheckHTTP(IPAddress ip, List<string> ports)
+        public static List<CheckingResult> CheckHTTP(IPAddress ip, List<string> ports, string httpRequest)
         {
             string address;
             List<CheckingResult> Lcr = new List<CheckingResult>();
@@ -57,7 +57,7 @@ namespace CameraCheckLocIP.MyClasses
                 foreach (var port in ports)
                 {
                     string adresswithport = string.Format("{0}:{1}", ip, port);
-                    address = string.Format(_httpRequest, adresswithport);
+                    address = string.Format(httpRequest, adresswithport);
 
                     using (var client = new HttpClient())
                     {
@@ -85,7 +85,7 @@ namespace CameraCheckLocIP.MyClasses
             }
             else
             {
-                address = string.Format(_httpRequest, ip);
+                address = string.Format(httpRequest, ip);
 
                 using (var client = new HttpClient())//повтор. упростить
                 {
@@ -97,22 +97,21 @@ namespace CameraCheckLocIP.MyClasses
                     return Lcr;
                 }
             }
-            return null;
         }
 
-        public static CheckingResult CheckHTTP(IPAddress ip, string port)
+        public static CheckingResult CheckHTTP(IPAddress ip, string port, string httpRequest)
         {
             string address;
             CheckingResult cr;
 
             if (string.IsNullOrEmpty(port))
             {
-                address = string.Format(_httpRequest, ip);
+                address = string.Format(httpRequest, ip);
             }
             else
             {
                 string adresswithport = string.Format("{0}:{1}", ip, port);
-                address = string.Format(_httpRequest, adresswithport);
+                address = string.Format(httpRequest, adresswithport);
             }
 
             using (var client = new HttpClient())

@@ -34,15 +34,23 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 //Если выдает ошибку, то нужно в файле проекта .csproj заменить значение параметра
 //< Deterministic > ...</ Deterministic > с true на false.
-[assembly: AssemblyVersion("1.3.*")]
+[assembly: AssemblyVersion("1.4.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 /*РУС
  * Как Ставиться Версия
  * -Если меняется интерфейс приложения то добавляется 1я цыфра
- * -Если меняется алгоритм приложения то добавляется 2я цыфра
+ * -Если меняется алгоритм приложения то добавляется 2я цыфра, но если меняется 1я цыфра, то 2я обнуляется
  * -Остальные изменяются при сборке
  * 
- * -версия начинает изменятся после полного функционирования программы. Как задуманно
- * изначально
+ * -версия 1.0 назначается после полного функционирования программы. Как задуманно изначально
+ * 
+ *ENG
+ * What is version
+ * -If change interface increment first digit
+ * -If change algorithm increment second digit but if change first digit second digit change to 0
+ * -Other default
+ * 
+ * -1.0 version is full functionality program as originally intended
+ * 
  */

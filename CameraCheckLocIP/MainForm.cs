@@ -19,6 +19,7 @@ namespace CameraCheckLocIP
     {
         #region мои переменные
          private TimeSpan _sequentalTime;
+         private Checker _checker = new Checker();
         #endregion
         public MainForm()
         {
@@ -97,12 +98,14 @@ namespace CameraCheckLocIP
                                          .Select(item => item.ToString())
                                          .ToList();//исправить, возможно можно сократить
 
-            Checker.StartChecking(this, tB_IPFrom.Text, tB_IPTo.Text, PortList, (int)nUD_timeout.Value);
 
+            _checker.StartCheckingAsync(this, tB_IPFrom.Text, tB_IPTo.Text, PortList, (int)nUD_timeout.Value);
+
+            //b_startScan.Enabled = true;
             //try
             //{
             //    //Task.Run(() =>{
-                
+
 
             //    Checker.CheckIPRange(IPAFrom, IPATo);
             //    var SuccessIPList = Checker.CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
@@ -141,6 +144,12 @@ namespace CameraCheckLocIP
 
             //    b_startScan.Enabled = true;
             //}
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _checker.Dispose();
+            _checker = null;
         }
     }
 }
