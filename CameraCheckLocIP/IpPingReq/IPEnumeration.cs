@@ -6,15 +6,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CameraCheckLocIP.Classes
+namespace CameraCheckLocIP.IpPingReq
 {
     internal class IPEnumeration
     {
         ///<summary>
-        /// IEnumerable<IPAddress>
-        /// еще один способ перебора адресов, еще не проверенный
-        ///<summary>
-        ///<param name="IPFrom"></param>
+        /// способ перебора IP адресов, еще не проверенный
+        ///</summary>
+        ///<param name="IPFrom">IP адресс начала перебора</param>
+        ///<param name="IPTo">IP адресс конца перебора</param>
         ///<returns>List<IPAddress></returns>
         public static List<IPAddress> GetIPList(IPAddress ipFrom, IPAddress ipTo)
         {
@@ -31,32 +31,31 @@ namespace CameraCheckLocIP.Classes
         }
 
         ///<summary>
-        /// IEnumerable<IPAddress>
-        /// еще один способ перебора адресов. Предпочтителен
-        ///<summary>
-        ///<param name="IPFrom"></param>
-        ///<returns></returns>
+        /// способ перебора IP адресов. Предпочтителен
+        ///</summary>
+        ///<param name="IPFrom">IP адресс начала перебора</param>
+        ///<param name="IPTo">IP адресс конца перебора</param>
+        ///<returns>IList<IPAddress></returns>
         public static List<IPAddress> EnumerateIPRange(IPAddress IPFrom, IPAddress IPTo)
         {
-            List<IPAddress> ipList = new List<IPAddress>();
+            List<IPAddress> IPList = new List<IPAddress>();
             var buffer = IPFrom.GetAddressBytes();
 
             do
             {
                 IPFrom = new IPAddress(buffer);
-                ipList.Add(IPFrom);
+                IPList.Add(IPFrom);
                 int i = buffer.Length - 1;
                 while (i >= 0 && ++buffer[i] == 0) i--;//нужно для сбрасывания на нули заполненные октеты, типа buffer = { 128, 255, 255, 255 } => { 129, 0, 0, 0 }               
             } while (!IPFrom.Equals(IPTo));
 
-            return ipList;
+            return IPList;
         }
 
         ///<summary>
-        /// перебирает все IPv4 адреса в локальной сети
-        ///<summary>
-        ///<param name="IPFrom"></param>
-        ///<returns></returns>
+        /// перебирает все IPv4 адреса в локальной сети, без заданного диапазона
+        ///</summary>
+        ///<returns>List<IPAddress></returns>
         public static List<IPAddress> GetIPListDNS()
         {
             IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
@@ -72,6 +71,10 @@ namespace CameraCheckLocIP.Classes
             return ipList;
         }
 
+        ///<summary>
+        /// перебирает все IPv4 адреса в локальной сети, используя LINQ. Нельзя задать диапазон
+        ///</summary>
+        ///<returns>IEnumerable<string></returns>
         public static IEnumerable<string> GetIP4Addresses()
         {
             return Dns.GetHostAddresses(Dns.GetHostName())
@@ -79,12 +82,23 @@ namespace CameraCheckLocIP.Classes
                 .Select(x => x.ToString());
         }
 
+        ///<summary>
+        /// самая короткая функция перебора IPv4 адресов в локальной сети, используя LINQ. 
+        /// Нельзя задать диапазон
+        ///</summary>
+        ///<returns>IPAddress[]</returns>
         public static IPAddress[] GetIP4Array()
         {
             return Dns.GetHostAddresses(Dns.GetHostName())
                     .Where(a => a.AddressFamily == AddressFamily.InterNetwork).ToArray();
         }
 
+        ///<summary>
+        /// перебирает все IP адреса из заданого диапазона
+        ///</summary>
+        ///<param name="firstIPAddress">IP адресс начала перебора</param>
+        ///<param name="lastIPAddress">IP адресс конца перебора</param>
+        ///<returns>List<IPAddress></returns>
         private static List<IPAddress> IPAddressesRange(IPAddress firstIPAddress, IPAddress lastIPAddress)
         {
             var firstIPAddressAsBytesArray = firstIPAddress.GetAddressBytes();
@@ -117,7 +131,7 @@ namespace CameraCheckLocIP.Classes
         /// перебирает все IP адреса из заданого диапазона
         /// что бы перевести int обратно в string нужно опять же сделать так:
         /// string address = new IPAddress(BitConverter.GetBytes(intAddress)).ToString();
-        ///<summary>
+        ///</summary>
         ///<param name="from">IP адресс начала перебора</param>
         ///<param name="to">IP адресс конца перебора</param>
         ///<returns>IEnumerable<int></returns>

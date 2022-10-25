@@ -8,17 +8,25 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CameraCheckLocIP.MyClasses
+namespace CameraCheckLocIP.IpPingReq
 {
     internal class HTTPChecking
     {
         #region мои переменные
          public string httpRequest = "http://{0}/cgi-bin/admin/privacy.cgi";
         #endregion
-        public static IEnumerable<HttpStatusCode> CheckHTTP(List<IPAddress> SuccessIPList, List<string> ports, string httpRequest)
+
+        ///<summary>
+        /// отправка HTTP-запроса на определенные IP адресса
+        ///</summary>
+        ///<param name="IPList">список IP адрессов</param>
+        ///<param name="ports">список портов</param>
+        ///<param name="httpRequest">http-запрос</param>
+        ///<returns>IEnumerable<HttpStatusCode></returns>
+        public static IEnumerable<HttpStatusCode> CheckHTTP(List<IPAddress> IPList, List<string> ports, string httpRequest)
         {
             string address;
-            foreach (var ip in SuccessIPList)
+            foreach (var ip in IPList)
                 if (ports.Count > 0)
                 {
                     foreach (var port in ports)
@@ -47,11 +55,18 @@ namespace CameraCheckLocIP.MyClasses
                 }
         }
 
+        ///<summary>
+        /// отправка HTTP-запроса на определенный IP адресс. предпочтительней
+        ///</summary>
+        ///<param name="ip">IP адресс</param>
+        ///<param name="ports">список портов</param>
+        ///<param name="httpRequest">http-запрос</param>
+        ///<returns>List<CheckingResult></returns>
         public static List<CheckingResult> CheckHTTP(IPAddress ip, List<string> ports, string httpRequest)
         {
             string address;
-            List<CheckingResult> Lcr = new List<CheckingResult>();
-            var cts = new CancellationTokenSource();
+            List<CheckingResult> crL = new List<CheckingResult>();
+
             if (ports.Count > 0)
             {
                 foreach (var port in ports)
@@ -66,22 +81,22 @@ namespace CameraCheckLocIP.MyClasses
                             client.Timeout = TimeSpan.FromMilliseconds(1500);
                             var task = client.GetAsync(address);
                             task.Wait();
-                            Lcr.Add(new CheckingResult(ip: ip,
+                            crL.Add(new CheckingResult(ip: ip,
                                                        port: port,
                                                        httpstatuscode: task.Result.StatusCode));
                         }
 
                         catch (AggregateException ex)
                         {
-                            Console.WriteLine(ex.ToString());
+                            Console.WriteLine(ex.ToString());//вывод на консоль так как данная информация мне не нужна, но может понадобиться в будующем
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine(ex.ToString());                            
+                            Console.WriteLine(ex.ToString());//вывод на консоль так как данная информация мне не нужна, но может понадобиться в будующем                            
                         }
                     }
                 }
-                return Lcr;
+                return crL;
             }
             else
             {
@@ -91,14 +106,21 @@ namespace CameraCheckLocIP.MyClasses
                 {
                     var task = client.GetAsync(address);
                     task.Wait();
-                    Lcr.Add(new CheckingResult(ip: ip,
+                    crL.Add(new CheckingResult(ip: ip,
                                                port: null,
                                                httpstatuscode: task.Result.StatusCode));
-                    return Lcr;
+                    return crL;
                 }
             }
         }
 
+        ///<summary>
+        /// отправка HTTP-запроса на определенный IP адресс
+        ///</summary>
+        ///<param name="ip">IP адресс</param>
+        ///<param name="port">порт</param>
+        ///<param name="httpRequest">http-запрос</param>
+        ///<returns>CheckingResult</returns>
         public static CheckingResult CheckHTTP(IPAddress ip, string port, string httpRequest)
         {
             string address;

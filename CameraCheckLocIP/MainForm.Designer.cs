@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.l_IPfrom = new System.Windows.Forms.Label();
             this.l_IPto = new System.Windows.Forms.Label();
             this.tB_IPFrom = new System.Windows.Forms.TextBox();
@@ -47,7 +48,6 @@
             this.nUD_timeout = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.l_totalTime = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.nUD_timeout)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,11 +115,13 @@
             // 
             // tB_output
             // 
+            this.tB_output.BackColor = System.Drawing.Color.White;
             this.tB_output.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tB_output.ForeColor = System.Drawing.Color.Red;
             this.tB_output.Location = new System.Drawing.Point(12, 503);
             this.tB_output.Multiline = true;
             this.tB_output.Name = "tB_output";
+            this.tB_output.ReadOnly = true;
             this.tB_output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tB_output.Size = new System.Drawing.Size(1008, 116);
             this.tB_output.TabIndex = 5;
@@ -248,20 +250,11 @@
             this.l_totalTime.TabIndex = 14;
             this.l_totalTime.Text = "0:00:00:00";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 645);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(1008, 23);
-            this.progressBar1.TabIndex = 15;
-            this.progressBar1.Visible = false;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1032, 707);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.l_totalTime);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.nUD_timeout);
@@ -278,6 +271,7 @@
             this.Controls.Add(this.tB_IPFrom);
             this.Controls.Add(this.l_IPto);
             this.Controls.Add(this.l_IPfrom);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "CameraCheckLocIP ";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -308,7 +302,6 @@
         public System.Windows.Forms.Button b_startScan;
         public System.Windows.Forms.Label l_totalTime;
         public System.Windows.Forms.TextBox tB_output;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.NumericUpDown nUD_timeout;
     }
 }

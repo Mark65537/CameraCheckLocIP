@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using CameraCheckLocIP.Classes;
 
@@ -18,7 +11,6 @@ namespace CameraCheckLocIP
     public partial class MainForm : Form
     {
         #region мои переменные
-         private TimeSpan _sequentalTime;
          private Checker _checker = new Checker();
         #endregion
         public MainForm()
@@ -26,19 +18,10 @@ namespace CameraCheckLocIP
             InitializeComponent();
         }
 
-        private async void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            //for (int i = 0; i < 10; i++)
-            //{
-
-            //    //lV_output.Items[1].Text = i.ToString();
-            //    lV_output.Items.Add(await Task.Run(() => { Thread.Sleep(3000); return DateTime.Now.ToLongTimeString(); }));
-
-            //    lV_output.Items[i].SubItems.Add(i.ToString());
-            //    lV_output.Items[i].SubItems.Add("port");
-            //}
             Text += Assembly.GetExecutingAssembly().GetName().Version;
-            MinimumSize = Size;
+            MinimumSize = Size;   
         }
 
         private void b_plus_Click(object sender, EventArgs e)
@@ -91,59 +74,12 @@ namespace CameraCheckLocIP
 
             lV_output.Items.Clear();
             tB_output.Clear();
-            //Stopwatch stopwatch = new Stopwatch();//создаем объект для того что бы засеч время
-            //stopwatch.Start();//засекаем время начала операции
 
             List<string> PortList = lB_port.Items.Cast<string>()
                                          .Select(item => item.ToString())
                                          .ToList();//исправить, возможно можно сократить
 
-
-            _checker.StartCheckingAsync(this, tB_IPFrom.Text, tB_IPTo.Text, PortList, (int)nUD_timeout.Value);
-
-            //b_startScan.Enabled = true;
-            //try
-            //{
-            //    //Task.Run(() =>{
-
-
-            //    Checker.CheckIPRange(IPAFrom, IPATo);
-            //    var SuccessIPList = Checker.CheckPingParForEach(IPEnumeration.EnumerateIPRange(IPAFrom, IPATo));
-
-            //    for (int i = 0; i < SuccessIPList.Count; i++)
-            //    {
-            //        //var v = await Task.Run(() => { return Checker.CheckHTTPforTask(SuccessIPList[i], PortList); });
-            //        //lV_output.Items.Add(v.Ip);
-            //        //lV_output.Items[i].SubItems.Add(v.Port);
-            //        //lV_output.Items[i].SubItems.Add(v.HttpStatusCode.ToString());
-            //        //lV_output.Items[i].SubItems.Add();
-            //    }
-
-
-            //    //lV_output.Items.SubItems.Add(i.ToString());
-            //    //lV_output.Items.SubItems.Add("port");
-            //    //foreach (var HTTPStat in Checker.CheckHTTP(SuccessIPList, PortList))
-            //    //    {
-            //    //        lV_output.Text = HTTPStat.ToString();
-            //    //    }
-            //    //});
-            //    //Checker.StartChecking(tB_IPFrom.Text, tB_IPTo.Text, PortList);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, "Ошибка");
-            //}
-            //finally
-            //{
-            //    stopwatch.Stop();//останавливаем счётчик            
-            //    TimeSpan ts = stopwatch.Elapsed;
-
-            //    l_totalTime.Text = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", // Создаем строку, содержащую время выполнения операции.
-            //                        ts.Hours, ts.Minutes, ts.Seconds,
-            //                        ts.Milliseconds / 10);
-
-            //    b_startScan.Enabled = true;
-            //}
+            _checker.StartCheckingAsync(this, tB_IPFrom.Text, tB_IPTo.Text, PortList, (int)nUD_timeout.Value);//передается ссылка на форму (MainForm), так как пока не найден другой способ обращаться к элементам формы для синхоного вывода на них
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

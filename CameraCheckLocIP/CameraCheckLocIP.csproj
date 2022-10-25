@@ -49,7 +49,6 @@
     <Compile Include="Model\CheckingResult.cs" />
     <Compile Include="Checker.cs" />
     <Compile Include="IpPingReq\HTTPChecking.cs" />
-    <Compile Include="IpPingReq\IPConverter.cs" />
     <Compile Include="IpPingReq\IPEnumeration.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

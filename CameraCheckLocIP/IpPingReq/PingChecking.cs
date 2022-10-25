@@ -7,10 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CameraCheckLocIP.MyClasses
+namespace CameraCheckLocIP.IpPingReq
 {
     internal class PingChecking
     {
+        ///<summary>
+        /// метод для Пинга IP адресов из списка, использующий Parallel.ForEach для перебора
+        ///</summary>
+        ///<param name="IPAddresses">список IP адресов которые нужно Пинговать</param>
+        ///<param name="timeout">Время задержки для Ping</param>
+        ///<returns>List<IPAddress></returns>
         public static List<IPAddress> CheckPingParForEach(List<IPAddress> IPAddresses, int timeout = 100)
         {
             List<IPAddress> SuccessIPList = new List<IPAddress>();
@@ -19,7 +25,6 @@ namespace CameraCheckLocIP.MyClasses
             {
                 Ping ping = new Ping();
                 var pStat = ping.Send(ip, timeout);
-                //pStat.Wait();
 
                 if (pStat != null)
                 {
@@ -35,11 +40,16 @@ namespace CameraCheckLocIP.MyClasses
             return SuccessIPList;
         }
 
+        ///<summary>
+        /// метод для Пинга IP адреса. Предпочтителен
+        ///</summary>
+        ///<param name="ip">IP адрес который нужно Пинговать</param>
+        ///<param name="timeout">Время задержки для Ping</param>
+        ///<returns>bool</returns>
         public static bool CheckPing(IPAddress ip, int timeout = 100)
         {
             Ping ping = new Ping();
             var pStat = ping.Send(ip, timeout);
-            //pStat.Wait();
 
             if (pStat != null)
             {
@@ -53,11 +63,11 @@ namespace CameraCheckLocIP.MyClasses
 
 
         ///<summary>
-        /// в данный момент не используется так как выдает не все значения
-        ///<summary>
-        ///<param name="IPAddresses"></param>
+        /// Не используется так как выдает не все значения
+        ///</summary>
+        ///<param name="IPAddresses">список IP адресов которые нужно Пинговать</param>
         ///<returns>List<IPAddress></returns>
-        private static List<IPAddress> CheckPingInvoke(List<IPAddress> IPAddresses)
+        public static List<IPAddress> CheckPingInvoke(List<IPAddress> IPAddresses)
         {
             List<IPAddress> SuccessIPList = new List<IPAddress>();
 
@@ -81,7 +91,6 @@ namespace CameraCheckLocIP.MyClasses
                 }
             });
 
-            MessageBox.Show("Invoke for");
             return SuccessIPList;
         }
     }
