@@ -15,7 +15,7 @@ http://<ip>[:<port>]/cgi-bin/admin/privacy.cgi
 если во время проверки произошли какие то ошибки, то выводиться «проверка не выполнена».
 
 # Инструкция по применению
-[!image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/mainform.png)
+![image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/mainform.png)
 1. Показывает общее время работы программы
 2. Панель вывода. В текущий момент используется только для вывода недоступных IP адрессов
 3. Список в котором выводятся доступные IP адресса(если есть), с их доступными портами и статус проверки HTTP-запросом
@@ -23,16 +23,16 @@ http://<ip>[:<port>]/cgi-bin/admin/privacy.cgi
 5. Список портов которые будут проверятся, если список пустой тогда порты не будут учитываться
 6. Кнопка для удаления выбранного порта из списка
 7. Кнопка для добавления порта. При нажатие на кнопку выводиться окно, в которое нужно ввести порт, который вам нужен
-[!image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/addport.png)
+![image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/addport.png)
 8. IP адресс конца проверки
 9. IP адресс начала проверки
 10. Кнопка при нажатие на которую начинается проверка
 
 Если проверка прошла без всяких ошибок, то выводиться окно:
-[!image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/checkOK.png) 
+![image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/checkOK.png) 
 
 Если же во время проверки произошла какая то ошибка, то выводиться окно, где будет написанно краткое описание ошибки:
-[!image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/checkFail.png) 
+![image](https://github.com/Mark65537/CameraCheckLocIP/blob/master/screens/checkFail.png) 
 
 # Описание классов программы
 Классы разделенны по задачам. Каждый класс отвечает за свою задачу
